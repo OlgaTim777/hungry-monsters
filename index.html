@@ -16,6 +16,28 @@
       color: #444;
     }
 
+    .designer-info {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      font-size: 16px;
+      color: #888;
+      margin-top: -10px;
+    }
+
+    .designer-info img {
+      width: 32px;
+      height: 32px;
+      vertical-align: middle;
+    }
+
+    .designer-info a {
+      color: #555;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
     .monster-container {
       display: flex;
       justify-content: space-around;
@@ -138,16 +160,23 @@
       width: 50px;
       height: auto;
     }
+
+    .mistake-counter {
+      margin-top: 10px;
+      font-size: 16px;
+      color: #d32f2f;
+    }
   </style>
 </head>
 <body>
 
 <h1>Feed the Hungry Monsters! 👻</h1>
-<div style="display: flex; justify-content: center; align-items: center; gap: 10px; font-size: 16px; color: #888; margin-top: -15px;">
-  <img src="https://i.imgur.com/QC0aRsL.jpeg"  alt="Designer Logo" width="32" height="32"><p style="font-size: 16px; color: #888; margin-top: -10px;">
-  by <a href="https://vk.com/club221025676"  target="_blank" style="color: #555; text-decoration: none;">Olga Timofeeva</a>
-</p>
- 
+
+<div class="designer-info">
+  <img src="https://i.imgur.com/QC0aRsL.jpeg"  alt="Designer Logo" width="32" height="32">
+  <p>by <a href="https://vk.com/club221025676"  target="_blank">Olga Timofeeva</a></p>
+</div>
+
 <div class="score-timer">
   Score: <span id="score">0</span> |
   Time Left: <span id="timer">60</span>s
@@ -173,12 +202,18 @@
   </div>
 </div>
 
+<!-- Mistake Counter -->
+<div class="mistake-counter">
+  Mistakes: <span id="mistakes">0</span>
+</div>
+
 <button id="restartButton">🔁 Restart Game</button>
 
 <!-- Victory Screen -->
 <div id="victoryScreen">
   <h1>🎉 You Win!</h1>
   <p>Your final score: <span id="finalScore">0</span></p>
+  <p>Mistakes: <span id="finalMistakes">0</span></p>
 </div>
 
 <!-- Confetti Canvas -->
@@ -196,6 +231,7 @@
   ];
 
   let score = 0;
+  let mistakes = 0;
   let timeLeft = 60;
   let timerInterval = null;
   let currentMonsterIndex = -1;
@@ -212,8 +248,10 @@
   const wordPool = document.getElementById('wordPool');
   const scoreDisplay = document.getElementById('score');
   const timerDisplay = document.getElementById('timer');
+  const mistakeDisplay = document.getElementById('mistakes');
   const victoryScreen = document.getElementById('victoryScreen');
   const finalScore = document.getElementById('finalScore');
+  const finalMistakes = document.getElementById('finalMistakes');
 
   const eatSound = document.getElementById('eatSound');
   const screamSound = document.getElementById('screamSound');
@@ -229,8 +267,10 @@
 
   function resetGame() {
     score = 0;
+    mistakes = 0;
     timeLeft = 60;
     scoreDisplay.textContent = score;
+    document.getElementById("mistakes").textContent = mistakes;
     timerDisplay.textContent = timeLeft;
     wordPool.innerHTML = '';
     monsterContainer.innerHTML = '';
@@ -304,12 +344,15 @@
       setTimeout(() => {
         element.remove();
         removeWordFromMonster(word);
-        selectRandomMonster(); // Highlight next random monster
+        selectRandomMonster(); // Next random monster
       }, 700);
     } else {
       const monsterEl = document.getElementById(`monster-${currentMonsterIndex}`);
       monsterEl.classList.add('scream');
       playSound(screamSound);
+
+      mistakes++;
+      document.getElementById("mistakes").textContent = mistakes;
 
       setTimeout(() => {
         monsterEl.classList.remove('scream');
@@ -357,6 +400,7 @@
 
   function showVictory() {
     finalScore.textContent = score;
+    finalMistakes.textContent = mistakes;
     victoryScreen.style.display = 'flex';
     launchConfetti(window.innerWidth / 2, window.innerHeight / 2);
   }
@@ -402,6 +446,7 @@
       ctx.lineTo(c.x + c.tilt, c.y + c.r + c.d);
       ctx.stroke();
     });
+
     updateConfetti();
     requestAnimationFrame(drawConfetti);
   }
