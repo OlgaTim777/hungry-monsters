@@ -143,10 +143,11 @@
 <body>
 
 <h1>Feed the Hungry Monsters! 👻</h1>
-<p style="font-size: 16px; color: #888; margin-top: -10px;">
+<div style="display: flex; justify-content: center; align-items: center; gap: 10px; font-size: 16px; color: #888; margin-top: -15px;">
+  <img src="https://i.imgur.com/QC0aRsL.jpeg"  alt="Designer Logo" width="32" height="32"><p style="font-size: 16px; color: #888; margin-top: -10px;">
   by <a href="https://vk.com/club221025676"  target="_blank" style="color: #555; text-decoration: none;">Olga Timofeeva</a>
 </p>
-
+ 
 <div class="score-timer">
   Score: <span id="score">0</span> |
   Time Left: <span id="timer">60</span>s
@@ -303,7 +304,7 @@
       setTimeout(() => {
         element.remove();
         removeWordFromMonster(word);
-        selectRandomMonster(); // Highlight next monster
+        selectRandomMonster(); // Highlight next random monster
       }, 700);
     } else {
       const monsterEl = document.getElementById(`monster-${currentMonsterIndex}`);
@@ -401,7 +402,6 @@
       ctx.lineTo(c.x + c.tilt, c.y + c.r + c.d);
       ctx.stroke();
     });
-
     updateConfetti();
     requestAnimationFrame(drawConfetti);
   }
